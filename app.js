@@ -45,7 +45,6 @@ app.use((req, res, next) => {
     console.log(req.user);
     next();
 });
-
 // -------------- ADD ROUTES ----------------
 
 app.use(routes);
