@@ -9,6 +9,14 @@ const User = connection.models.User;
 //-------------- POST ROUTES ----------------
 
 router.post('/login', passport.authenticate("local", { failureRedirect: '/login-failure', successRedirect: '/login-success' }));
+
+router.post('/logout', (req, res, next) => {
+    req.logout();
+    res.json({
+        "status":"success"
+    });
+});
+
 router.post('/register', (req, res, next) => {
     const passwordObj = genPassword(req.body.password);
     const newUser = new User({
@@ -35,24 +43,15 @@ router.get('/protected-route', isAuth, (req, res, next) => {
     });
 });
 
-router.get('/logout', (req, res, next) => {
-    req.logout();
-    res.json({
-        "user":req.user,
-        "status":"success"
-    });
-});
-
 router.get('/login-success', (req, res, next) => {
     res.json({
-        "user":req.user,
+        "user":req.user.username,
         "status":"success"
     });
 });
 
 router.get('/login-failure', (req, res, next) => {
     res.json({
-        "user":req.user,
         "status":"failure",
     });
 });
