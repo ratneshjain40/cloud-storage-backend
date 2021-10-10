@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
+var cors = require('cors')
 
 const routes = require('./auth/routes');
 const connection = require('./db/database');
@@ -11,6 +12,7 @@ require('dotenv').config();
 
 var app = express();
 
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -48,5 +50,5 @@ app.use((req, res, next) => {
 // -------------- ADD ROUTES ----------------
 
 app.use(routes);
-app.listen(3000);
-console.log("Listening on port 3000");
+app.listen(5000);
+console.log("Listening on port 5000");

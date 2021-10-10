@@ -5,7 +5,6 @@ const connection = require('../db/database');
 const isAuth = require("./verifyAuth").isAuth;
 const User = connection.models.User;
 
-
 //-------------- POST ROUTES ----------------
 
 router.post('/login', passport.authenticate("local", { failureRedirect: '/login-failure', successRedirect: '/login-success' }));
