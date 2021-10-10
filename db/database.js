@@ -13,6 +13,7 @@ const connection = mongoose.createConnection(conn, {
 
 const UserSchema = new mongoose.Schema({
     username: String,
+    email:String,
     hash: String,
     salt: String
 });

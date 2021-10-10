@@ -3,7 +3,8 @@ module.exports.isAuth = (req, res, next) => {
         next();
     } else {
         res.status(401).json({
-            "status": "unauthorized"
+            "success":false,
+            "msg": "unauthorized"
         });
     }
 }

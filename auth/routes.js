@@ -12,7 +12,7 @@ router.post('/login', passport.authenticate("local", { failureRedirect: '/login-
 router.post('/logout', (req, res, next) => {
     req.logout();
     res.json({
-        "status":"success"
+        "success":true
     });
 });
 
@@ -20,6 +20,7 @@ router.post('/register', (req, res, next) => {
     const passwordObj = genPassword(req.body.password);
     const newUser = new User({
         username: req.body.username,
+        email: req.body.email,
         hash: passwordObj.hash,
         salt: passwordObj.salt
     });
@@ -27,31 +28,44 @@ router.post('/register', (req, res, next) => {
     newUser.save().
         then((user) => {
             console.log(`user created ${user}`);
+            res.json({
+                "success":true
+            });
+        }).catch(err => {
+            res.json({
+                "success":false
+            });
         });
-
-    res.json({
-        "status":"success"
-    });
 });
 
 //-------------- GET ROUTES ----------------
 
 router.get('/protected-route', isAuth, (req, res, next) => {
     res.json({
-        "status":"authenticated"
+        "success":true,
+        "msg":"authenticated"
+    });
+});
+
+router.get('/is-logged', isAuth, (req, res, next) => {
+    res.json({
+        "user":req.user.username,
+        "email":req.user.email,
+        "success":true,
     });
 });
 
 router.get('/login-success', (req, res, next) => {
     res.json({
         "user":req.user.username,
-        "status":"success"
+        "email":req.user.email,
+        "success":true,
     });
 });
 
 router.get('/login-failure', (req, res, next) => {
     res.json({
-        "status":"failure",
+        "success":false,
     });
 });
 

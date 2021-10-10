@@ -7,9 +7,10 @@ const validPassword = require('./passwordUtils').validPassword;
 const customFields = {
 	usernameField: 'username',
 	passwordField: 'password',
+	passReqToCallback: true
 };
 
-const verifyCallback = (username, password, done) => {
+const verifyCallback = (req, username, password, done) => {
 	User.findOne({ username: username })
 		.then((user) => {
 			console.log('inside db User ' + user);
