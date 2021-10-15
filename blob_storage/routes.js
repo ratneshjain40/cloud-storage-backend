@@ -6,7 +6,7 @@ const isAuth = require("./verifyAuth").isAuth;
 router.post('getSASUrl', isAuth ,(req, res, next) => {
     // fileName passed by client in req body
     const container_name = storageUtils.getContainerName(req.user.username,req.body.fileName);
-    const sas_url = storageUtils.getSASUrl(container_name,) 
+    const sas_url = storageUtils.getSASUrl(container_name) 
     res.json({
         "status":true,
         "url":sas_url
@@ -27,6 +27,7 @@ router.post('setMetaData', isAuth ,(req, res, next) => {
     }
     
 });
+
 router.post('listBlobs', isAuth ,(req, res, next) => {
     // fileName passed by client in req body
     const container_name = storageUtils.getContainerName(req.user.username);
