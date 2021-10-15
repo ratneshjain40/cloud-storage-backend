@@ -85,8 +85,8 @@ async function list_blobs(container_name) {
     let blobList = [];
     for await (const blob of blobs) {
         blobList.push({
-            name:blob.name,
-            metadata:blob.metadata
+            name: blob.name,
+            metadata: blob.metadata
         });
     }
     return blobList;
@@ -97,19 +97,25 @@ async function getMetaDataOnBlob(containerName, blobName) {
     const blobClient = client.getBlobClient(blobName);
     const data = await blobClient.getProperties();
     console.log(data.metadata)
-    return data.metadata
+    return data.metadata;
 }
 
-function setMetaDataOnBlob(containerName, blobName, metadata) {
+async function setMetaDataOnBlob(containerName, blobName, metadata) {
+    metadata = {
+        "hello": "world"
+    }
     const client = blobServiceClient.getContainerClient(containerName);
     const blobClient = client.getBlobClient(blobName);
-    blobClient.setMetadata(metadata).then(() => {
-        console.log("set metadata");
-        return true;
-    }).catch((err) => {
-        console.log("err on set metadata");
-        return false;
-    });
+    const state = await blobClient.setMetadata(metadata).
+        then(() => {
+            console.log("set metadata");
+            return true;
+        }).catch((err) => {
+            console.log("err on set metadata");
+            return false;
+        });
+
+    return state;
 }
 
 //list_blobs("test-con");
