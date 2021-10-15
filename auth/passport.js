@@ -35,6 +35,7 @@ const strategy = new LocalStrategy(customFields, verifyCallback);
 
 passport.use(strategy);
 
+// stores the given field in session and mongodb session store.
 passport.serializeUser((user, done) => {
 	// user._id is same as user.id
 	done(null, user.id);

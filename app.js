@@ -4,7 +4,8 @@ const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
 var cors = require('cors')
 
-const routes = require('./auth/routes');
+const auth_routes = require('./auth/routes');
+const blob_storage_routes = require('./blob_storage/routes');
 const connection = require('./db/database');
 
 //-------------- GENERAL SETUP ----------------
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 });
 // -------------- ADD ROUTES ----------------
 
-app.use(routes);
+app.use(auth_routes);
+app.use(blob_storage_routes);
 app.listen(5000);
 console.log("Listening on port 5000");
