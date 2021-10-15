@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const storageUtils = require('./utils');
-const isAuth = require("./verifyAuth").isAuth;
+const isAuth = require("../auth/verifyAuth").isAuth;
 
 // -------------- POST ROUTES ----------------
 router.post('getSASUrl', isAuth ,(req, res, next) => {
