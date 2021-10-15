@@ -3,6 +3,7 @@ const passport = require('passport');
 const genPassword = require('./passwordUtils').genPassword;
 const connection = require('../db/database');
 const isAuth = require("./verifyAuth").isAuth;
+const createContainer = require("../blob_storage/utils").create_container;
 const User = connection.models.User;
 
 //-------------- POST ROUTES ----------------
@@ -12,7 +13,7 @@ router.post('/login', passport.authenticate("local", { failureRedirect: '/login-
 router.post('/logout', (req, res, next) => {
     req.logout();
     res.json({
-        "success":true
+        "success": true
     });
 });
 
@@ -25,15 +26,17 @@ router.post('/register', (req, res, next) => {
         salt: passwordObj.salt
     });
 
+    // create container for that user
+    createContainer(req.body.username);
     newUser.save().
         then((user) => {
             console.log(`user created ${user}`);
             res.json({
-                "success":true
+                "success": true
             });
         }).catch(err => {
             res.json({
-                "success":false
+                "success": false
             });
         });
 });
@@ -42,30 +45,30 @@ router.post('/register', (req, res, next) => {
 
 router.get('/protected-route', isAuth, (req, res, next) => {
     res.json({
-        "success":true,
-        "msg":"authenticated"
+        "success": true,
+        "msg": "authenticated"
     });
 });
 
 router.get('/is-logged', isAuth, (req, res, next) => {
     res.json({
-        "user":req.user.username,
-        "email":req.user.email,
-        "success":true,
+        "user": req.user.username,
+        "email": req.user.email,
+        "success": true,
     });
 });
 
 router.get('/login-success', (req, res, next) => {
     res.json({
-        "user":req.user.username,
-        "email":req.user.email,
-        "success":true,
+        "user": req.user.username,
+        "email": req.user.email,
+        "success": true,
     });
 });
 
 router.get('/login-failure', (req, res, next) => {
     res.json({
-        "success":false,
+        "success": false,
     });
 });
 
