@@ -46,9 +46,6 @@ router.post('/setMetaData', isAuth, async (req, res, next) => {
 });
 
 router.post('/renameBlob', isAuth,  async (req, res, next) => {
-    const metadata = req.body.metadata;
-    // azure meta data only accepts str - do not pass int fields;
-    console.log(metadata);
 
     const container_name = storageUtils.getContainerName(req.user.username);
     const state = await storageUtils.blobRename(container_name, req.body.filename, req.body.rename);
@@ -65,9 +62,6 @@ router.post('/renameBlob', isAuth,  async (req, res, next) => {
 });
 
 router.post('/deleteBlob', isAuth,  async (req, res, next) => {
-    const metadata = req.body.metadata;
-    // azure meta data only accepts str - do not pass int fields;
-    console.log(metadata);
 
     const container_name = storageUtils.getContainerName(req.user.username);
     const state = await storageUtils.blobDelete(container_name, req.body.filename);
