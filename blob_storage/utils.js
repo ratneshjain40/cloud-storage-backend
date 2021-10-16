@@ -14,8 +14,9 @@ function getContainerName(user_name) {
     return container_name
 }
 
-async function create_container(container_name) {
+async function create_container(user_name) {
     // Connect to container: user-files
+    const container_name = getContainerName(user_name);
     const containerClient = blobServiceClient.getContainerClient(container_name);
     const createContainerResponse = await containerClient.createIfNotExists();
     console.log("Container created for user " + container_name);

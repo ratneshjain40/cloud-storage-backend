@@ -3,40 +3,41 @@ const storageUtils = require('./utils');
 const isAuth = require("../auth/verifyAuth").isAuth;
 
 // -------------- POST ROUTES ----------------
-router.post('/getSASUrl', isAuth ,async (req, res, next) => {
+router.post('/getSASUrl', isAuth, async (req, res, next) => {
     // fileName passed by client in req body
     console.log(req.body.fileName);
     const container_name = storageUtils.getContainerName(req.user.username);
-    const sas_url = await storageUtils.getSASUrl(container_name,req.body.fileName);
+    const sas_url = await storageUtils.getSASUrl(container_name, req.body.fileName);
     res.json({
-        "status":true,
-        "url":sas_url
+        "success": true,
+        "url": sas_url
     });
 });
 
-router.post('/setMetaData', isAuth ,async (req, res, next) => {
-    console.log(req.body.metadata);
+router.post('/setMetaData', isAuth, async (req, res, next) => {
+    const metadata = JSON.parse(req.body.metadata);
+    console.log(metadata);
     const container_name = storageUtils.getContainerName(req.user.username);
-    const state = await storageUtils.setMetaDataOnBlob(container_name,req.body.fileName,req.body.metadata);
-    if(state) {
+    const state = await storageUtils.setMetaDataOnBlob(container_name, req.body.fileName, metadata);
+    if (state) {
         res.json({
-            "status":true
+            "success": true
         });
     } else {
         res.json({
-            "status":false
+            "success": false
         });
     }
-    
+
 });
 
-router.post('/listBlobs', isAuth , async (req, res, next) => {
+router.get('/listBlobs', isAuth, async (req, res, next) => {
     // fileName passed by client in req body
     const container_name = storageUtils.getContainerName(req.user.username);
-    const blob_list = await storageUtils.list_blobs(container_name) 
+    const blob_list = await storageUtils.list_blobs(container_name)
     res.json({
-        "status":true,
-        "blob_list":blob_list
+        "success": true,
+        "blob_list": blob_list
     });
 });
 
