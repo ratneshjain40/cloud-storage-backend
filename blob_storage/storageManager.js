@@ -38,7 +38,7 @@ async function getSASUrl(containerName, blobName) {
         expiresOn.setMinutes(expiresOn.getMinutes() + 60);
 
         const sasUrl = await blobClient.generateSasUrl({
-            permissions: storage.BlobSASPermissions.parse("cw"), // "racwdl for all Permissions"
+            permissions: storage.BlobSASPermissions.parse("rcw"), // "racwdl for all Permissions"
             startsOn,
             expiresOn
         });
@@ -102,17 +102,62 @@ async function getMetaDataOnBlob(containerName, blobName) {
 }
 
 async function setMetaDataOnBlob(containerName, blobName, metadata) {
-    metadata = {
-        "hello": "world"
-    }
     const client = blobServiceClient.getContainerClient(containerName);
     const blobClient = client.getBlobClient(blobName);
-    const state = await blobClient.setMetadata(metadata).
-        then(() => {
-            console.log("set metadata");
+    const state = await blobClient
+        .setMetadata(metadata)
+        .then(() => {
+            console.log('metadata set');
             return true;
-        }).catch((err) => {
-            console.log("err on set metadata");
+        })
+        .catch((err) => {
+            console.log('err on set metadata');
+            console.log(err.message);
+            return false;
+        });
+
+    return state;
+}
+
+async function blobRename(containerName, blobName, newBlobName) {
+
+    const client = blobServiceClient.getContainerClient(containerName);
+    const blobClient = client.getBlobClient(blobName);
+    const blobClientNew = client.getBlobClient(newBlobName);
+    if (!(blobClientNew.exists())) {
+        const state = await blobClientNew.syncCopyFromURL(blobClient.url)
+            .then(() => {
+                console.log('copied file');
+                const del = await blobDelete(username, blobName);
+                // todo: change metadata here
+                return del;
+            })
+            .catch((err) => {
+                console.log('err on file copy');
+                console.log(err.message);
+                return false;
+            });
+
+        return state;
+    } else {
+        return false;
+    }
+
+}
+
+async function blobDelete(containerName, blobName) {
+
+    const client = blobServiceClient.getContainerClient(containerName);
+    const blobClient = client.getBlobClient(blobName);
+
+    const state = await blobClient.deleteIfExists()
+        .then(() => {
+            console.log('deleted file');
+            return true;
+        })
+        .catch((err) => {
+            console.log('err on file delete');
+            console.log(err.message);
             return false;
         });
 
@@ -130,3 +175,5 @@ module.exports.getSASUrl = getSASUrl;
 module.exports.list_blobs = list_blobs;
 module.exports.getMetaDataOnBlob = getMetaDataOnBlob;
 module.exports.setMetaDataOnBlob = setMetaDataOnBlob;
+module.exports.blobRename = blobRename;
+module.exports.blobDelete = blobDelete;
