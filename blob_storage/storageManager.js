@@ -119,7 +119,10 @@ async function setMetaDataOnBlob(containerName, blobName, metadata) {
     return state;
 }
 
-async function blobRename(containerName, blobName, newBlobName) {
+async function blobRename(containerName, blobName, newMetadata) {
+
+    const newBlobName = newMetadata.filename;
+    console.log(newBlobName);
 
     const client = blobServiceClient.getContainerClient(containerName);
     const blobClient = client.getBlobClient(blobName);
@@ -135,7 +138,9 @@ async function blobRename(containerName, blobName, newBlobName) {
                 console.log('copied file');
                 const del = await blobDelete(containerName, blobName);
                 // todo: change metadata here
-                return del;
+                const set = await setMetaDataOnBlob(containerName,newBlobName);
+
+                return set && del;
             })
             .catch((err) => {
                 console.log('err on file copy');
