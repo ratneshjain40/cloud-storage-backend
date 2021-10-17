@@ -5,9 +5,9 @@ const isAuth = require("../auth/verifyAuth").isAuth;
 // -------------- GET ROUTES ----------------
 router.post('/getSASUrl', isAuth, async (req, res, next) => {
     // fileName passed by client in req body
-    console.log(req.body.fileName);
+    console.log(req.body.filename);
     const container_name = storageUtils.getContainerName(req.user.username);
-    const sas_url = await storageUtils.getSASUrl(container_name, req.body.fileName);
+    const sas_url = await storageUtils.getSASUrl(container_name, req.body.filename);
     res.json({
         "success": true,
         "url": sas_url
