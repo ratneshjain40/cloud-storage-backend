@@ -124,11 +124,16 @@ async function blobRename(containerName, blobName, newBlobName) {
     const client = blobServiceClient.getContainerClient(containerName);
     const blobClient = client.getBlobClient(blobName);
     const blobClientNew = client.getBlobClient(newBlobName);
-    if (!(blobClientNew.exists())) {
-        const state = await blobClientNew.syncCopyFromURL(blobClient.url)
+    const oldExists = await blobClient.exists();
+    const newExists = await blobClientNew.exists();
+
+    if (oldExists && !(newExists)) {
+        //const state = await blobClientNew.syncCopyFromURL(blobClient.url)
+        const response = await blobClientNew.beginCopyFromURL(blobClient.url);
+        const result = await response.pollUntilDone()
             .then(async () => {
                 console.log('copied file');
-                const del = await blobDelete(username, blobName);
+                const del = await blobDelete(containerName, blobName);
                 // todo: change metadata here
                 return del;
             })
@@ -138,7 +143,7 @@ async function blobRename(containerName, blobName, newBlobName) {
                 return false;
             });
 
-        return state;
+        return result;
     } else {
         return false;
     }
@@ -163,11 +168,6 @@ async function blobDelete(containerName, blobName) {
 
     return state;
 }
-
-//list_blobs("test-con");
-//getSASUrl("test-con", "newfile");
-//setMetaDataOnBlob("test-con","Endpoints.docx");
-//getMetaDataOnBlob("test-con", "Endpoints.docx");
 
 module.exports.getContainerName = getContainerName;
 module.exports.create_container = create_container;

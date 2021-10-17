@@ -45,9 +45,12 @@ router.post('/setMetaData', isAuth, async (req, res, next) => {
 
 });
 
-router.post('/renameBlob', isAuth,  async (req, res, next) => {
-
+router.post('/renameBlob', isAuth, async (req, res, next) => {
     const container_name = storageUtils.getContainerName(req.user.username);
+    console.log(container_name);
+    console.log('filename ' + req.body.filename);
+    console.log('rename ' + req.body.rename);
+
     const state = await storageUtils.blobRename(container_name, req.body.filename, req.body.rename);
     if (state) {
         res.json({
@@ -61,7 +64,7 @@ router.post('/renameBlob', isAuth,  async (req, res, next) => {
 
 });
 
-router.post('/deleteBlob', isAuth,  async (req, res, next) => {
+router.post('/deleteBlob', isAuth, async (req, res, next) => {
 
     const container_name = storageUtils.getContainerName(req.user.username);
     const state = await storageUtils.blobDelete(container_name, req.body.filename);

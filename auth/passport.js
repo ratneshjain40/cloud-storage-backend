@@ -13,7 +13,6 @@ const customFields = {
 const verifyCallback = (req, username, password, done) => {
 	User.findOne({ username: username })
 		.then((user) => {
-			console.log('inside db User ' + user);
 			if (!user) {
 				return done(null, false);
 			}
@@ -44,7 +43,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((userId, done) => {
 	User.findById(userId)
 		.then((user) => {
-			console.log('Found User ', user);
 			done(null, user);
 		})
 		.catch((err) => {
