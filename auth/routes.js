@@ -3,7 +3,7 @@ const passport = require('passport');
 const genPassword = require('./passwordUtils').genPassword;
 const connection = require('../db/database');
 const isAuth = require("./verifyAuth").isAuth;
-const createContainer = require("../blob_storage/utils").create_container;
+const createContainer = require("../blob_storage/storageManager").create_container;
 const User = connection.models.User;
 
 //-------------- POST ROUTES ----------------

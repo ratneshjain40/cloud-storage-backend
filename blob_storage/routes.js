@@ -3,7 +3,7 @@ const storageUtils = require('./storageManager');
 const isAuth = require("../auth/verifyAuth").isAuth;
 
 // -------------- GET ROUTES ----------------
-router.get('/getSASUrl', isAuth, async (req, res, next) => {
+router.post('/getSASUrl', isAuth, async (req, res, next) => {
     // fileName passed by client in req body
     console.log(req.body.fileName);
     const container_name = storageUtils.getContainerName(req.user.username);
@@ -32,7 +32,7 @@ router.post('/setMetaData', isAuth, async (req, res, next) => {
     console.log(metadata);
 
     const container_name = storageUtils.getContainerName(req.user.username);
-    const state = await storageUtils.setMetaDataOnBlob(container_name, req.body.filename, metadata);
+    const state = await storageUtils.setMetaDataOnBlob(container_name, metadata.filename, metadata);
     if (state) {
         res.json({
             "success": true

@@ -126,7 +126,7 @@ async function blobRename(containerName, blobName, newBlobName) {
     const blobClientNew = client.getBlobClient(newBlobName);
     if (!(blobClientNew.exists())) {
         const state = await blobClientNew.syncCopyFromURL(blobClient.url)
-            .then(() => {
+            .then(async () => {
                 console.log('copied file');
                 const del = await blobDelete(username, blobName);
                 // todo: change metadata here
