@@ -40,7 +40,8 @@ async function getSASUrl(containerName, blobName) {
         const sasUrl = await blobClient.generateSasUrl({
             permissions: storage.BlobSASPermissions.parse("rcw"), // "racwdl for all Permissions"
             startsOn,
-            expiresOn
+            expiresOn,
+            contentDisposition:"attachment"
         });
         console.log("SAS URL IS " + sasUrl);
         // on put req - returns status 201 created
