@@ -104,19 +104,26 @@ async function getMetaDataOnBlob(containerName, blobName) {
 async function setMetaDataOnBlob(containerName, blobName, metadata) {
     const client = blobServiceClient.getContainerClient(containerName);
     const blobClient = client.getBlobClient(blobName);
-    const state = await blobClient
-        .setMetadata(metadata)
-        .then(() => {
-            console.log('metadata set');
-            return true;
-        })
-        .catch((err) => {
-            console.log('err on set metadata');
-            console.log(err.message);
-            return false;
-        });
+    const exists = await blobClient.exists();
 
-    return state;
+    if (exists) {
+        const state = await blobClient
+            .setMetadata(metadata)
+            .then(() => {
+                console.log('metadata set');
+                return true;
+            })
+            .catch((err) => {
+                console.log('err on set metadata');
+                console.log(err.message);
+                return false;
+            });
+
+        return state;
+    } else {
+        console.log("file does not exist to set metadata");
+        return false;
+    }
 }
 
 async function blobRename(containerName, blobName, newMetadata) {
@@ -137,8 +144,7 @@ async function blobRename(containerName, blobName, newMetadata) {
             .then(async () => {
                 console.log('copied file');
                 const del = await blobDelete(containerName, blobName);
-                // todo: change metadata here
-                const set = await setMetaDataOnBlob(containerName,newBlobName);
+                const set = await setMetaDataOnBlob(containerName, newBlobName, newMetadata);
 
                 return set && del;
             })
@@ -150,6 +156,12 @@ async function blobRename(containerName, blobName, newMetadata) {
 
         return result;
     } else {
+        if (!oldExists) {
+            console.log("file does not exist to rename");
+        }
+        if (newExists) {
+            console.log("new_file alreday exists");
+        }
         return false;
     }
 
@@ -160,18 +172,25 @@ async function blobDelete(containerName, blobName) {
     const client = blobServiceClient.getContainerClient(containerName);
     const blobClient = client.getBlobClient(blobName);
 
-    const state = await blobClient.deleteIfExists()
-        .then(() => {
-            console.log('deleted file');
-            return true;
-        })
-        .catch((err) => {
-            console.log('err on file delete');
-            console.log(err.message);
-            return false;
-        });
+    const exists = await blobClient.exists();
 
-    return state;
+    if (exists) {
+        const state = await blobClient.delete()
+            .then(() => {
+                console.log('deleted file');
+                return true;
+            })
+            .catch((err) => {
+                console.log('err on file delete');
+                console.log(err.message);
+                return false;
+            });
+
+        return state;
+    } else {
+        console.log("file does not exist to delete");
+        return false;
+    }
 }
 
 module.exports.getContainerName = getContainerName;
