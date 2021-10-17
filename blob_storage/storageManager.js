@@ -26,6 +26,7 @@ async function create_container(user_name) {
 // ---------------------- SAS TOKENS ----------------------
 
 // Pass blobName=null to get sasUrl for whole container
+// TODO: Sperate permissions for upload and download
 async function getSASUrl(containerName, blobName) {
     const client = blobServiceClient.getContainerClient(containerName);
 
