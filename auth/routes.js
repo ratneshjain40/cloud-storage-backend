@@ -17,7 +17,8 @@ router.post('/logout', (req, res, next) => {
     });
 });
 
-router.post('/register', (req, res, next) => {
+router.post('/register', async (req, res, next) => {
+    const username = req.body.username;
     const passwordObj = genPassword(req.body.password);
     const newUser = new User({
         username: req.body.username,
@@ -26,19 +27,38 @@ router.post('/register', (req, res, next) => {
         salt: passwordObj.salt
     });
 
-    // create container for that user
-    createContainer(req.body.username);
-    newUser.save().
-        then((user) => {
-            console.log(`user created ${user}`);
-            res.json({
-                "success": true
-            });
-        }).catch(err => {
-            res.json({
-                "success": false
-            });
+    const user_exists = await User.findOne({ username: username })
+        .then((user) => {
+            if (!user) {
+                return false;
+            }
+            return true
+        })
+        .catch((err) => {
+            console.log(err.message);
         });
+
+    if (!user_exists) {
+        // create container for that user
+        createContainer(req.body.username);
+        newUser.save().
+            then((user) => {
+                console.log(`user created ${user}`);
+                res.json({
+                    "success": true
+                });
+            }).catch(err => {
+                res.json({
+                    "success": false
+                });
+                console.log(err.message);
+            });
+    } else {
+        res.json({
+            "success": false,
+            "msg": "user already exists"
+        });
+    }
 });
 
 //-------------- GET ROUTES ----------------
