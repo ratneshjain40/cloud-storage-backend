@@ -40,10 +40,12 @@ router.post('/register', async (req, res, next) => {
 
     if (!user_exists) {
         // create container for that user
-        createContainer(req.body.username);
         newUser.save().
             then((user) => {
                 console.log(`user created ${user}`);
+                
+                createContainer(req.body.username);
+
                 res.json({
                     "success": true
                 });
