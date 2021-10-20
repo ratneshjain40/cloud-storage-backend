@@ -1,4 +1,8 @@
 const storage = require("@azure/storage-blob");
+
+const connection = require('../db/database');
+const User = connection.models.User;
+
 require('dotenv').config();
 
 // ---------------------- SETUP ----------------------
@@ -9,14 +13,26 @@ const accessKey = process.env.AZURE_STORAGE_ACCESS_KEY;
 const cerds = new storage.StorageSharedKeyCredential(account, accessKey);
 const blobServiceClient = storage.BlobServiceClient.fromConnectionString(connStr);
 
-function getContainerName(user_name) {
-    let container_name = user_name.replace(/\s+/g, '-').toLowerCase();
+async function getContainerName(user_name) {
+    const user_obj = await User.findOne({ username: user_name })
+        .then((user) => {
+            if (!user) {
+                return null;
+            }
+            return user;
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+    console.log(user_obj);
+    let container_name = (user_name + user_obj._id.toString()).replace(/\s+/g, '-').toLowerCase();
+    console.log(container_name);
     return container_name
 }
 
 async function create_container(user_name) {
     // Connect to container: user-files
-    const container_name = getContainerName(user_name);
+    const container_name =  await getContainerName(user_name);
     const containerClient = blobServiceClient.getContainerClient(container_name);
     const createContainerResponse = await containerClient.createIfNotExists();
     console.log("Container created for user " + container_name);
@@ -42,7 +58,7 @@ async function getSASUrl(containerName, blobName) {
             permissions: storage.BlobSASPermissions.parse("rcw"), // "racwdl for all Permissions"
             startsOn,
             expiresOn,
-            contentDisposition:"attachment"
+            contentDisposition: "attachment"
         });
         console.log("SAS URL IS " + sasUrl);
         // on put req - returns status 201 created
