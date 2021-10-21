@@ -10,7 +10,7 @@
 
 <!-- Description -->
 <h4 align="center">
-    Backend service for google drive built using Azure services by
+    Backend service for google drive clone built using Azure services by
     <a href="https://github.com/@ratneshjain40/">@ratneshjain40</a>
 </h4>
 
