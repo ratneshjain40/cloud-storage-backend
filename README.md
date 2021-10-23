@@ -150,7 +150,7 @@ Response on success:
 ```
 
 ```
-POST - /renameBlob
+PATCH - /renameBlob
 
 Request:
 {
@@ -165,7 +165,7 @@ Response on success:
 ```
 
 ```
-POST - /deleteBlob
+DELETE - /deleteBlob
 
 Request:
 {
