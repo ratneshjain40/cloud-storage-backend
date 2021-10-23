@@ -1,7 +1,7 @@
 const storage = require("@azure/storage-blob");
-
 const connection = require('../db/database');
 const User = connection.models.User;
+const Files = connection.models.Files;
 
 require('dotenv').config();
 
@@ -24,7 +24,6 @@ async function getContainerName(user_name) {
         .catch((err) => {
             console.log(err.message);
         });
-    console.log(user_obj);
     let container_name = (user_name + user_obj._id.toString()).replace(/\s+/g, '-').toLowerCase();
     console.log(container_name);
     return container_name
@@ -32,7 +31,7 @@ async function getContainerName(user_name) {
 
 async function create_container(user_name) {
     // Connect to container: user-files
-    const container_name =  await getContainerName(user_name);
+    const container_name = await getContainerName(user_name);
     const containerClient = blobServiceClient.getContainerClient(container_name);
     const createContainerResponse = await containerClient.createIfNotExists();
     console.log("Container created for user " + container_name);
@@ -117,6 +116,79 @@ async function getMetaDataOnBlob(containerName, blobName) {
     const data = await blobClient.getProperties();
     console.log(data.metadata)
     return data.metadata;
+}
+
+async function uploadFileCosmos(username, filename, file_buffer, hash) {
+    const container_name = await getContainerName(username);
+
+    // initiate a new db file object
+    const newFile = new Files({
+        username: username,
+        filename: filename,
+        hash: hash,
+    });
+
+    // return obj
+    const state = {
+        status: true,
+        msg: "file uploaded"
+    }
+
+    await Files.findOne({ username: username, filename: filename })
+        .then(async (file) => {
+
+            // if no file is there we upload a new file
+            if (!file) {
+                await newFile.save().then(async (file) => {
+
+                    state.status = await uploadFile(container_name, filename, file_buffer);
+                    state.status = true;
+                    state.msg = "file uploaded";
+
+                }).catch(err => {
+                    state.status = false;
+                    state.msg = "error";
+                    console.log(err.message);
+                });
+
+            } else {
+                // if
+                console.log("Hashes ", file.hash, hash);
+                if (file.hash == hash) {
+                    state.status = false;
+                    state.msg = "same file already exists";
+                } else {
+                    await Files.updateOne({ username: username, filename: filename }, {
+                        hash: hash
+                    });
+                    await uploadFile(container_name, filename, file_buffer);
+
+                    state.status = true;
+                    state.msg = "file updated";
+                }
+            }
+        })
+        .catch((err) => {
+            console.log(err.message);
+            state.status = false;
+            state.msg = "error";
+        });
+
+    return state;
+}
+
+async function uploadFile(containerName, blobName, file_buffer) {
+    const client = blobServiceClient.getContainerClient(containerName);
+    const blockBlobClient = client.getBlockBlobClient(blobName);
+    const state = await blockBlobClient.uploadData(file_buffer).then(() => {
+        console.log('uploaded file');
+        return true;
+    }).catch((err) => {
+        console.log('err on upload file');
+        console.log(err.message);
+        return false;
+    });;
+    return state;
 }
 
 async function setMetaDataOnBlob(containerName, blobName, metadata) {
@@ -215,6 +287,8 @@ module.exports.getContainerName = getContainerName;
 module.exports.create_container = create_container;
 module.exports.getSASUrl = getSASUrl;
 module.exports.list_blobs = list_blobs;
+module.exports.uploadFile = uploadFile;
+module.exports.uploadFileCosmos = uploadFileCosmos;
 module.exports.getMetaDataOnBlob = getMetaDataOnBlob;
 module.exports.setMetaDataOnBlob = setMetaDataOnBlob;
 module.exports.blobRename = blobRename;

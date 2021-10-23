@@ -2,7 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
-var cors = require('cors')
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const auth_routes = require('./auth/routes');
 const blob_storage_routes = require('./blob_storage/routes');
@@ -15,6 +16,7 @@ var app = express();
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(express.json());
+app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 
 //  -------------- SESSION SETUP ----------------

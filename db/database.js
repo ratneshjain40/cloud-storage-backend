@@ -18,6 +18,14 @@ const UserSchema = new mongoose.Schema({
     salt: String
 });
 
+const FileSchema = new mongoose.Schema({
+    username: String,
+    filename: String,
+    hash: String,
+});
+
+
 const User = connection.model('User', UserSchema);
+const Files = connection.model('Files', FileSchema);
 
 module.exports = connection;

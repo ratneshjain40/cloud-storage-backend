@@ -15,6 +15,19 @@ router.get('/listBlobs', isAuth, async (req, res, next) => {
 
 // -------------- POST ROUTES ----------------
 
+router.post('/uploadFile', isAuth, async (req, res, next) => {
+    const filename = req.body.filename;
+    console.log(req.files);
+    const file = req.files.newFile;
+    const username = req.user.username;
+
+    const state = await storageUtils.uploadFileCosmos(username, filename, file.data, file.md5);
+    res.json({
+        "success": state
+    });
+});
+
+
 router.post('/getSASUrl', isAuth, async (req, res, next) => {
     // fileName passed by client in req body
     console.log(req.body.filename);
