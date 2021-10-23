@@ -5,7 +5,6 @@ const isAuth = require("../auth/verifyAuth").isAuth;
 // -------------- GET ROUTES ----------------
 
 router.get('/listBlobs', isAuth, async (req, res, next) => {
-    // fileName passed by client in req body
     const container_name = await storageUtils.getContainerName(req.user.username);
     const blob_list = await storageUtils.list_blobs(container_name);
     res.json({
@@ -46,14 +45,22 @@ router.post('/setMetaData', isAuth, async (req, res, next) => {
 
 });
 
-router.post('/renameBlob', isAuth, async (req, res, next) => {
+router.patch('/renameBlob', isAuth, async (req, res, next) => {
+    //const data = {
+    //    filename: metaData.filename,
+    //    metadata: {
+    //        filename: newFileName,
+    //        createdate: metaData.createdate,
+    //        lastmodified: new Date(Date.now()).toDateString(),
+    //        filesize: metaData.filesize,
+    //        type: metaData.type,
+    //    },
+    //}
     const newmetadata = req.body.metadata;
     console.log(newmetadata);
 
     const container_name = await storageUtils.getContainerName(req.user.username);
     console.log(container_name);
-    console.log('filename ' + req.body.filename);
-    console.log('rename ' + req.body.rename);
 
     const state = await storageUtils.blobRename(container_name, req.body.filename, newmetadata);
     if (state) {
@@ -68,7 +75,7 @@ router.post('/renameBlob', isAuth, async (req, res, next) => {
 
 });
 
-router.post('/deleteBlob', isAuth, async (req, res, next) => {
+router.delete('/deleteBlob', isAuth, async (req, res, next) => {
 
     const container_name = await storageUtils.getContainerName(req.user.username);
     const state = await storageUtils.blobDelete(container_name, req.body.filename);
