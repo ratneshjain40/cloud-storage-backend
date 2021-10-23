@@ -63,7 +63,233 @@ AZURE_STORAGE_ACCESS_KEY=""
 <br />
 
 ## 📌API Endpoints
+- Auth
+```
+POST  - /register
 
+Request: 
+{
+    username: 'username',
+    email: 'email'
+    password: 'password',
+}
+
+Response on success:
+{
+    "success": true,
+}
+```
+
+```
+POST - /login
+
+Request: 
+{
+    username: 'username',
+    password: 'password',
+}
+
+Response on success:
+{
+    "user": req.user.username,
+    "email": req.user.email,
+    "success": true,
+}
+```
+
+```
+GET - /is-logged
+
+Response on success:
+{
+    "user": req.user.username,
+    "email": req.user.email,
+    "success": true,
+}
+```
+
+- Storage Routes
+
+```
+GET - /listBlobs
+
+Response on success:
+{
+    "success": true,
+  "blob_list": blob_list
+}
+```
+
+```
+POST - /getSASUrl
+
+Request:
+{
+    "filename": filename
+}
+
+Response on success:
+{
+  "success": true,
+  "url": sas_url
+}
+```
+
+```
+POST - /setMetaData
+
+Request:
+{
+    "metadata": metadata
+}
+
+Response on success:
+{
+  "success": true
+}
+```
+
+```
+POST - /renameBlob
+
+Request:
+{
+    "filename": filename,
+    "metadata": metadata
+}
+
+Response on success:
+{
+  "success": true
+}
+```
+
+```
+POST - /deleteBlob
+
+Request:
+{
+    "filename": filename
+}
+
+Response on success:
+{
+  "success": true
+}
+```
+```
+POST  - /register
+
+Request: 
+{
+    username: 'username',
+    email: 'email'
+    password: 'password',
+}
+
+Response on success:
+{
+    "success": true,
+}
+```
+
+```
+POST - /login
+
+Request: 
+{
+    username: 'username',
+    password: 'password',
+}
+
+Response on success:
+{
+    "user": req.user.username,
+    "email": req.user.email,
+    "success": true,
+}
+```
+
+```
+GET - /is-logged
+
+Response on success:
+{
+    "user": req.user.username,
+    "email": req.user.email,
+    "success": true,
+}
+```
+
+- Storage Routes
+
+```
+GET - /listBlobs
+
+Response on success:
+{
+    "success": true,
+  "blob_list": blob_list
+}
+```
+
+```
+POST - /getSASUrl
+
+Request:
+{
+    "filename": filename
+}
+
+Response on success:
+{
+  "success": true,
+  "url": sas_url
+}
+```
+
+```
+POST - /setMetaData
+
+Request:
+{
+    "metadata": metadata
+}
+
+Response on success:
+{
+  "success": true
+}
+```
+
+```
+POST - /renameBlob
+
+Request:
+{
+    "filename": filename,
+    "metadata": metadata
+}
+
+Response on success:
+{
+  "success": true
+}
+```
+
+```
+POST - /deleteBlob
+
+Request:
+{
+    "filename": filename
+}
+
+Response on success:
+{
+  "success": true
+}
+```
 
 
 <br />
