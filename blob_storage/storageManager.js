@@ -257,6 +257,17 @@ async function blobRename(containerName, blobName, newMetadata) {
 
 }
 
+async function deleteBlobCosmos(username,filename) {
+    return await Files.deleteOne({ username: username, filename: filename }).then(()=>{
+        console.log('file deleted in DB');
+        return true;
+    }).catch((err) => {
+        console.log('err on file delete in DB');
+        console.log(err.message);
+        return false;
+    });
+}
+
 async function blobDelete(containerName, blobName) {
 
     const client = blobServiceClient.getContainerClient(containerName);
@@ -292,4 +303,5 @@ module.exports.uploadFileCosmos = uploadFileCosmos;
 module.exports.getMetaDataOnBlob = getMetaDataOnBlob;
 module.exports.setMetaDataOnBlob = setMetaDataOnBlob;
 module.exports.blobRename = blobRename;
+module.exports.deleteBlobCosmos = deleteBlobCosmos;
 module.exports.blobDelete = blobDelete;
