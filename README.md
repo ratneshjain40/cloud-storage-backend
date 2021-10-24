@@ -121,6 +121,22 @@ Response on success:
 ```
 
 ```
+POST - /uploadFile 
+ 
+Request: 
+{ 
+  "filename": filename, 
+  "newFile": file 
+} 
+ 
+Response on success: 
+{ 
+  "success": true, 
+  "msg": message 
+}
+```
+
+```
 POST - /getSASUrl
 
 Request:
