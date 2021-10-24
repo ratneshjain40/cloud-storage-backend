@@ -20,6 +20,7 @@
 
 > NOTE : Frontend For this app can be found at 👉 [@ArnavGuptaaa/google-drive-clone](https://github.com/ArnavGuptaaa/google-drive-clone)
 
+---
 
 <br />
 
@@ -37,20 +38,21 @@ $ cd cloud-storage-backend
 # Install dependencies
 $ npm install
 
-# Run the app 
+# Run the app
 $ npm start
 ```
 
 <br />
 
-## 📌Environment Variables 
+## 📌Environment Variables
 
-You will need the following environment variables in your ``.env`` file
+You will need the following environment variables in your `.env` file
+
 ```.env
 DB_STRING=""
 SECRET=""
 
-COSMOSDB_USER = 
+COSMOSDB_USER =
 COSMOSDB_PASSWORD = ""
 COSMOSDB_DBNAME = ""
 COSMOSDB_HOST= ""
@@ -63,11 +65,13 @@ AZURE_STORAGE_ACCESS_KEY=""
 <br />
 
 ## 📌API Endpoints
+
 - Auth
+
 ```
 POST  - /register
 
-Request: 
+Request:
 {
     username: 'username',
     email: 'email'
@@ -83,7 +87,7 @@ Response on success:
 ```
 POST - /login
 
-Request: 
+Request:
 {
     username: 'username',
     password: 'password',
@@ -121,18 +125,18 @@ Response on success:
 ```
 
 ```
-POST - /uploadFile 
- 
-Request: 
-{ 
-  "filename": filename, 
-  "newFile": file 
-} 
- 
-Response on success: 
-{ 
-  "success": true, 
-  "msg": message 
+POST - /uploadFile
+
+Request:
+{
+  "filename": filename,
+  "newFile": file
+}
+
+Response on success:
+{
+  "success": true,
+  "msg": message
 }
 ```
 
@@ -193,15 +197,16 @@ Response on success:
   "success": true
 }
 ```
+
 <br />
 
 ## 📌Credits
 
 This software uses the following open source packages:
+
 - [Node.js](https://nodejs.org/)
 - [Passport.js](http://www.passportjs.org/)
 - [Azure SDK](https://github.com/Azure/azure-sdk-for-js)
-
 
 <!-- Footer -->
 <br />
