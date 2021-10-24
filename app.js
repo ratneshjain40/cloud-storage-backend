@@ -14,7 +14,7 @@ require('dotenv').config();
 
 var app = express();
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: process.env.SERVER_IP}));
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
