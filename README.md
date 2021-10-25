@@ -48,7 +48,7 @@ $ npm start
 
 You will need the following environment variables in your `.env` file
 
-```.env
+```python
 DB_STRING=""
 SECRET=""
 
@@ -68,7 +68,7 @@ AZURE_STORAGE_ACCESS_KEY=""
 
 - Auth
 
-```
+```json
 POST  - /register
 
 Request:
@@ -84,7 +84,7 @@ Response on success:
 }
 ```
 
-```
+```json
 POST - /login
 
 Request:
@@ -101,7 +101,7 @@ Response on success:
 }
 ```
 
-```
+```json
 GET - /is-logged
 
 Response on success:
@@ -114,7 +114,7 @@ Response on success:
 
 - Storage Routes
 
-```
+```json
 GET - /listBlobs
 
 Response on success:
@@ -124,7 +124,7 @@ Response on success:
 }
 ```
 
-```
+```json
 POST - /uploadFile
 
 Request:
@@ -140,7 +140,7 @@ Response on success:
 }
 ```
 
-```
+```json
 POST - /getSASUrl
 
 Request:
@@ -155,7 +155,7 @@ Response on success:
 }
 ```
 
-```
+```json
 POST - /setMetaData
 
 Request:
@@ -169,7 +169,7 @@ Response on success:
 }
 ```
 
-```
+```json
 PATCH - /renameBlob
 
 Request:
@@ -184,7 +184,7 @@ Response on success:
 }
 ```
 
-```
+```json
 DELETE - /deleteBlob
 
 Request:
